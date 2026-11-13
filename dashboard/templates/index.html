@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Community Dashboard — {{ guild_name }}</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 1.5rem; }
+    .container { max-width: 1100px; margin: auto; }
+    .header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+    .btn { background: #5865F2; color: white; padding: 0.6rem 1rem; border-radius: 8px; text-decoration: none; font-weight: 600; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .card { background: #1e293b; padding: 1.2rem; border-radius: 12px; border: 1px solid #334155; }
+    .kpi { font-size: 2rem; font-weight: 700; margin: 0.3rem 0; }
+    .evo { color: #38bdf8; font-size: 0.9rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; }
+    th, td { text-align: left; padding: 0.65rem; border-bottom: 1px solid #334155; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📊 {{ guild_name }}</h1>
+      <a class="btn" href="/export/csv?token={{ token }}">⬇️ Exporter CSV (90j)</a>
+    </div>
+
+    <div class="grid">
+      <div class="card"><div>Messages (7j)</div><div class="kpi">{{ curr.total_messages }}</div><div class="evo">{{ msg_evo }}</div></div>
+      <div class="card"><div>Médias (7j)</div><div class="kpi">{{ curr.media_posts }}</div><div class="evo">{{ med_evo }}</div></div>
+      <div class="card"><div>Membres actifs</div><div class="kpi">{{ curr.active_members }}</div><div class="evo">Sur 7 jours</div></div>
+      <div class="card"><div>Arrivées / Départs</div><div class="kpi">+{{ curr.joins }} / -{{ curr.leaves }}</div><div class="evo">Mouvements</div></div>
+    </div>
+
+    <div class="card" style="margin-bottom: 1.5rem;">
+      <h3>Évolution quotidienne des messages</h3>
+      <canvas id="activityChart" height="95"></canvas>
+    </div>
+
+    <div class="card">
+      <h3>Historique des rapports générés</h3>
+      <table>
+        <thead><tr><th>Type</th><th>Période</th><th>Messages</th><th>Évolution</th></tr></thead>
+        <tbody>
+          {% for rep in reports %}
+          <tr>
+            <td>{{ rep.period_type }}</td>
+            <td>{{ rep.start_date }} → {{ rep.end_date }}</td>
+            <td>{{ rep.summary_data.current.total_messages }}</td>
+            <td>{{ rep.summary_data.msg_evo }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4">Aucun rapport périodique enregistré pour le moment.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    new Chart(document.getElementById('activityChart'), {
+      type: 'line',
+      data: {
+        labels: {{ chart_labels | tojson }},
+        datasets: [{
+          label: 'Messages',
+          data: {{ chart_values | tojson }},
+          borderColor: '#5865F2',
+          backgroundColor: 'rgba(88, 101, 242, 0.2)',
+          tension: 0.3,
+          fill: true
+        }]
+      },
+      options: { plugins: { legend: { display: false } } }
+    });
+  </script>
+</body>
+</html>

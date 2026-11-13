@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: dcm_user
+      POSTGRES_PASSWORD: dcm_pass
+      POSTGRES_DB: dcm_db
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  bot:
+    build: .
+    restart: always
+    env_file: .env
+    depends_on:
+      - db
+    command: python -m bot.main
+
+  dashboard:
+    build: .
+    restart: always
+    env_file: .env
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    command: uvicorn dashboard.app:app --host 0.0.0.0 --port 8000
+
+volumes:
+  pg_data:
