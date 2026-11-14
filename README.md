@@ -1,4 +1,3 @@
-```markdown
 # 🤖 discord_community_manager
 
 Bot Discord autonome de création, d'administration, de statistiques en temps réel et d'analyse communautaire, accompagné d'un tableau de bord Web interactif.
@@ -66,7 +65,6 @@ cd discord-community-manager
 2. **Configurer les variables d'environnement :**
 ```bash
 cp .env.example .env
-
 ```
 
 
@@ -76,20 +74,17 @@ DISCORD_TOKEN=votre_token_discord_ici
 DATABASE_URL=postgresql+asyncpg://dcm_user:dcm_pass@db:5432/dcm_db
 DASHBOARD_ADMIN_TOKEN=un_mot_de_passe_securise
 DASHBOARD_URL=http://localhost:8000
-
 ```
 
 
 3. **Lancer les conteneurs avec Docker :**
 ```bash
 docker compose up -d --build
-
 ```
 
 
 4. **Initialiser le serveur Discord :**
 Exécutez la commande `/setup` dans n'importe quel salon de votre serveur Discord pour créer la structure complète et activer l'embed statistique en direct.
-
 
 
 ## 💬 Commandes Slash disponibles
@@ -111,11 +106,9 @@ Le tableau de bord est accessible à l'adresse configurée dans `DASHBOARD_URL` 
 
 ```text
 http://localhost:8000/?token=un_mot_de_passe_securise
-
 ```
 
 Depuis l'interface, vous pouvez visualiser les indicateurs clés des 7 derniers jours, suivre l'évolution quotidienne sur un graphique interactif, consulter l'historique des rapports générés et exporter les statistiques des 90 derniers jours au format **CSV**.
-
 ---
 
 ## 🔒 Confidentialité et sécurité
